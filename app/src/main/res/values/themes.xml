@@ -1,0 +1,13 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- 启动主题：纯白，避免白闪 -->
+    <style name="Theme.EdgeSide" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/md_blue_700</item>
+        <item name="colorPrimaryVariant">@color/md_blue_900</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorSecondary">@color/md_blue_500</item>
+        <item name="android:statusBarColor">@color/md_blue_700</item>
+        <item name="android:navigationBarColor">@color/surface_light</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+        <item name="android:windowBackground">@color/surface_light</item>
+    </style>
+</resources>

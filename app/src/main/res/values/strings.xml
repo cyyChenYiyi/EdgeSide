@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">EdgeSide</string>
+
+    <!-- 通知监听服务描述（用户在系统设置看到的） -->
+    <string name="notif_listener_label">EdgeSide 通知摘要</string>
+    <string name="notif_listener_desc">将系统通知以摘要形式显示在悬浮面板中，仅在内存中处理，不上传</string>
+
+    <!-- 前台服务常驻通知 -->
+    <string name="svc_running_title">EdgeSide 正在运行</string>
+    <string name="svc_running_text">边缘小条已激活，可从屏幕侧边拉出</string>
+
+    <!-- 主 app -->
+    <string name="home_title">EdgeSide</string>
+    <string name="home_subtitle">边缘快捷面板</string>
+
+    <!-- 权限引导 -->
+    <string name="perm_title">需要授权</string>
+    <string name="perm_overlay">悬浮窗权限</string>
+    <string name="perm_overlay_desc">授权后可在屏幕边缘显示小条</string>
+    <string name="perm_notif">通知权限</string>
+    <string name="perm_notif_desc">用于显示前台服务通知（Android 13+）</string>
+    <string name="perm_notif_listener">通知监听权限</string>
+    <string name="perm_notif_listener_desc">在系统设置中授权后，可在面板查看最新通知</string>
+    <string name="perm_battery">电池优化豁免</string>
+    <string name="perm_battery_desc">请将 EdgeSide 设为「不优化」以避免被系统杀掉</string>
+    <string name="perm_autostart">自启动权限</string>
+    <string name="perm_autostart_desc">部分厂商需要将本 app 加入自启动白名单</string>
+
+    <string name="action_grant">去授权</string>
+    <string name="action_granted">已授权 ✓</string>
+    <string name="action_start_service">启动悬浮服务</string>
+    <string name="action_stop_service">停止悬浮服务</string>
+    <string name="action_open_settings">打开主 app</string>
+</resources>
