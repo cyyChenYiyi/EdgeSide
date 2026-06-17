@@ -1,0 +1,50 @@
+<resources>
+    <string name="app_name">EdgeSide</string>
+    <string name="service_running">EdgeSide 正在运行</string>
+    <string name="service_running_desc">边缘小条已就绪，随时可呼出快捷面板</string>
+    <string name="action_stop">停止服务</string>
+
+    <string name="home_title">EdgeSide</string>
+    <string name="home_subtitle">你的边缘快捷工具</string>
+    <string name="home_status">服务状态</string>
+    <string name="home_status_running">运行中</string>
+    <string name="home_status_stopped">已停止</string>
+    <string name="home_start">启动边缘小条</string>
+    <string name="home_stop">停止边缘小条</string>
+    <string name="home_pick_apps">选择钉选应用</string>
+    <string name="home_settings">设置</string>
+
+    <string name="perm_overlay">悬浮窗</string>
+    <string name="perm_overlay_desc">需要在其他应用上方显示小条和面板</string>
+    <string name="perm_notification">通知权限</string>
+    <string name="perm_notification_desc">需要显示前台服务通知</string>
+    <string name="perm_notification_listener">通知监听</string>
+    <string name="perm_notification_listener_desc">可选：在面板上显示系统通知摘要</string>
+
+    <string name="panel_pinned_apps">钉选应用</string>
+    <string name="panel_notifications">通知</string>
+    <string name="panel_battery">电池</string>
+    <string name="panel_battery_charging">充电中</string>
+    <string name="panel_battery_discharging">使用中</string>
+    <string name="panel_network">网速</string>
+    <string name="panel_clipboard">剪贴板</string>
+    <string name="panel_no_pinned">还没有钉选应用</string>
+
+    <string name="pick_apps_title">选择应用</string>
+    <string name="pick_apps_search">搜索应用…</string>
+    <string name="pick_apps_selected">已选 %1$d</string>
+
+    <string name="settings_title">设置</string>
+    <string name="settings_theme_color">主题色</string>
+    <string name="settings_bar_edge">小条位置</string>
+    <string name="settings_bar_edge_right">右侧</string>
+    <string name="settings_bar_edge_left">左侧</string>
+    <string name="settings_bar_height">小条高度</string>
+    <string name="settings_card_notifications">显示通知卡片</string>
+    <string name="settings_card_battery">显示电池卡片</string>
+    <string name="settings_card_network">显示网速卡片</string>
+    <string name="settings_card_clipboard">显示剪贴板卡片</string>
+
+    <string name="edge_left">LEFT</string>
+    <string name="edge_right">RIGHT</string>
+</resources>

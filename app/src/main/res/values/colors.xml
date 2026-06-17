@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#1976D2</color>
+    <color name="primary_dark">#1565C0</color>
+    <color name="accent">#42A5F5</color>
+    <color name="bar_bg">#66000000</color>
+    <color name="panel_bg">#F0FFFFFF</color>
+    <color name="panel_card_bg">#FFFFFFFF</color>
+    <color name="text_primary">#FF212121</color>
+    <color name="text_secondary">#FF757575</color>
+    <color name="divider">#FFE0E0E0</color>
+    <color name="status_on">#43A047</color>
+    <color name="status_off">#757575</color>
+</resources>
