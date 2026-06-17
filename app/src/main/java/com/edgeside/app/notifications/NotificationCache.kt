@@ -1,9 +1,10 @@
 package com.edgeside.app.notifications
 
-import android.app.ActivityThread
 import android.app.Application
 import android.app.Notification
+import android.content.pm.ApplicationInfo
 import android.service.notification.StatusBarNotification
+import com.edgeside.app.EdgeSideApp
 import java.util.concurrent.ConcurrentHashMap
 
 object NotificationCache {
@@ -41,15 +42,16 @@ object NotificationCache {
 
         if (items.isEmpty()) return ""
 
-        val app: Application? = try {
-            ActivityThread.currentApplication()
-        } catch (_: Throwable) { null }
+        val app: Application? = EdgeSideApp.instance
         val pm = app?.packageManager
 
         return items.joinToString("\n") { sbn ->
-            val appName = pm?.getApplicationLabel(
-                try { pm.getApplicationInfo(sbn.packageName, 0) } catch (_: Throwable) { null }
-            )?.toString() ?: sbn.packageName
+            val appName = pm?.let {
+                try {
+                    val info: ApplicationInfo? = it.getApplicationInfo(sbn.packageName, 0)
+                    info?.let { inf -> it.getApplicationLabel(inf).toString() }
+                } catch (_: Throwable) { null }
+            } ?: sbn.packageName
             val title = sbn.notification.extras.getCharSequence(Notification.EXTRA_TITLE)
                 ?.toString()?.take(40) ?: "(无标题)"
             "• $appName: $title"
