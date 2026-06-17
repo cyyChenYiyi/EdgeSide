@@ -13,3 +13,4 @@
 # APKs and build artifacts
 *.apk
 *.zip
+build_log.txt
