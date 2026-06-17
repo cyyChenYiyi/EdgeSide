@@ -159,6 +159,10 @@ private fun AppRow(app: AppEntry, pinned: Boolean, onClick: () -> Unit) {
             Text(text = app.label, fontWeight = FontWeight.Medium, fontSize = 16.sp)
             Text(text = app.packageName, fontSize = 12.sp, color = IosGroupLabel)
         }
-        Checkbox(checked = pinned, onCheckedChange = null, checkedColor = IosBlue)
+        Checkbox(
+            checked = pinned,
+            onCheckedChange = null,
+            colors = androidx.compose.material.CheckboxDefaults.colors(checkedColor = IosBlue)
+        )
     }
 }

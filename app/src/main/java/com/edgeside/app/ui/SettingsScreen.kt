@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -209,7 +210,11 @@ private fun RadioOption(label: String, selected: Boolean, onClick: () -> Unit) {
         modifier = Modifier.clickable(onClick = onClick),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        RadioButton(selected = selected, onClick = null, selectedColor = IosBlue)
+        RadioButton(
+            selected = selected,
+            onClick = null,
+            colors = androidx.compose.material.RadioButtonDefaults.colors(selectedColor = IosBlue)
+        )
         Text(text = label, fontSize = 16.sp)
     }
 }
