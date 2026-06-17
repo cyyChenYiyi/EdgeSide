@@ -9,20 +9,24 @@ import androidx.compose.material.Surface
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.edgeside.app.ui.theme.IosBackground
+import com.edgeside.app.ui.theme.IosBlue
+import com.edgeside.app.ui.theme.IosBlueDark
+import com.edgeside.app.ui.theme.IosCardBg
+import com.edgeside.app.ui.theme.IosShapes
+import com.edgeside.app.ui.theme.IosTypography
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
+        // iOS-style light status bar (dark icons on light background)
+        WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = true
         setContent {
             EdgeSideTheme {
                 Surface(color = MaterialTheme.colors.background) {
@@ -35,13 +39,30 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun EdgeSideTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
-    val primary = Color(0xFF1976D2)
     val colors = if (darkTheme) {
-        darkColors(primary = primary, primaryVariant = Color(0xFF0D47A1), secondary = Color(0xFF42A5F5))
+        darkColors(
+            primary = IosBlue,
+            primaryVariant = IosBlueDark,
+            secondary = IosBlue,
+            background = Color(0xFF000000),
+            surface = Color(0xFF1C1C1E),
+            onPrimary = Color.White,
+            onBackground = Color.White,
+            onSurface = Color.White
+        )
     } else {
-        lightColors(primary = primary, primaryVariant = Color(0xFF0D47A1), secondary = Color(0xFF42A5F5))
+        lightColors(
+            primary = IosBlue,
+            primaryVariant = IosBlueDark,
+            secondary = IosBlue,
+            background = IosBackground,
+            surface = IosCardBg,
+            onPrimary = Color.White,
+            onBackground = Color.Black,
+            onSurface = Color.Black
+        )
     }
-    MaterialTheme(colors = colors, typography = MaterialTheme.typography, content = content)
+    MaterialTheme(colors = colors, typography = IosTypography, shapes = IosShapes, content = content)
 }
 
 @Composable

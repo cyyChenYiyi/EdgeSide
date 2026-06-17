@@ -3,11 +3,13 @@ package com.edgeside.app.overlay
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Outline
 import android.os.BatteryManager
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewOutlineProvider
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -17,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.edgeside.app.R
 import com.edgeside.app.data.DataRepository
 import com.edgeside.app.data.entity.PinnedApp
+import com.edgeside.app.system.RecentAppsProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -39,8 +42,10 @@ class EdgePanelView(ctx: Context) : LinearLayout(ctx) {
     private var tickerJob: Job? = null
     private var lastClipText: String = ""
 
+    private lateinit var recentAppsList: RecyclerView
     private lateinit var appsGrid: RecyclerView
     private lateinit var cardsList: RecyclerView
+    private lateinit var recentAdapter: RecentAppsAdapter
     private lateinit var appsAdapter: PinnedAppsAdapter
     private lateinit var cardsAdapter: InfoCardsAdapter
     private var currentPrefs: com.edgeside.app.data.UserPreferences? = null
@@ -50,9 +55,25 @@ class EdgePanelView(ctx: Context) : LinearLayout(ctx) {
     init {
         LayoutInflater.from(ctx).inflate(R.layout.view_edge_panel, this, true)
         orientation = VERTICAL
-        setBackgroundColor(0xF0FFFFFF.toInt())
+        // The background drawable already has rounded corners; clip children to it.
+        background = ctx.getDrawable(R.drawable.panel_bg)
+        clipToOutline = true
+        outlineProvider = object : ViewOutlineProvider() {
+            override fun getOutline(view: View, outline: Outline) {
+                val r = (24 * resources.displayMetrics.density)
+                outline.setRoundRect(0, 0, view.width, view.height, r)
+            }
+        }
+
+        recentAppsList = findViewById(R.id.recentAppsList)
         appsGrid = findViewById(R.id.appsGrid)
         cardsList = findViewById(R.id.cardsList)
+
+        recentAppsList.layoutManager =
+            LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
+        recentAdapter = RecentAppsAdapter(ctx) { pkg -> onAppLaunch?.invoke(pkg) }
+        recentAppsList.adapter = recentAdapter
+        recentAppsList.isNestedScrollingEnabled = false
 
         appsGrid.layoutManager = GridLayoutManager(ctx, 4)
         appsAdapter = PinnedAppsAdapter(ctx) { pkg -> onAppLaunch?.invoke(pkg) }
@@ -84,16 +105,28 @@ class EdgePanelView(ctx: Context) : LinearLayout(ctx) {
         tickerJob?.cancel()
         tickerJob = scope.launch {
             while (true) {
+                refreshRecentApps()
                 refreshCards()
                 delay(2000)
             }
         }
+        // Immediate first refresh
+        refreshRecentApps()
     }
 
     fun release() {
         appsJob?.cancel()
         prefsJob?.cancel()
         tickerJob?.cancel()
+    }
+
+    private fun refreshRecentApps() {
+        try {
+            val list = RecentAppsProvider.query(context)
+            recentAdapter.submitList(list)
+        } catch (e: Throwable) {
+            Timber.e(e, "refreshRecentApps failed")
+        }
     }
 
     private fun refreshCards() {
@@ -178,6 +211,48 @@ class EdgePanelView(ctx: Context) : LinearLayout(ctx) {
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         // Consume touch inside panel to prevent leaking to underlying apps
         return true
+    }
+
+    // ---- Recent Apps Adapter (horizontal) ----
+    private class RecentAppsAdapter(
+        private val ctx: Context,
+        private val onClick: (String) -> Unit
+    ) : RecyclerView.Adapter<RecentAppViewHolder>() {
+
+        private val items = mutableListOf<RecentAppsProvider.RecentApp>()
+        private val pm = ctx.packageManager
+
+        fun submitList(list: List<RecentAppsProvider.RecentApp>) {
+            // Only notify when content actually changed to avoid flicker
+            if (items.map { it.packageName } == list.map { it.packageName }) return
+            items.clear()
+            items.addAll(list)
+            notifyDataSetChanged()
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentAppViewHolder {
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_recent_app, parent, false)
+            return RecentAppViewHolder(view)
+        }
+
+        override fun onBindViewHolder(holder: RecentAppViewHolder, position: Int) {
+            val app = items[position]
+            val info = try {
+                pm.getApplicationInfo(app.packageName, 0)
+            } catch (_: Throwable) { null }
+            holder.icon.setImageDrawable(
+                info?.loadIcon(pm) ?: ctx.getDrawable(android.R.drawable.sym_def_app_icon)
+            )
+            holder.label.text = app.label
+            holder.itemView.setOnClickListener { onClick(app.packageName) }
+        }
+
+        override fun getItemCount(): Int = items.size
+    }
+
+    private class RecentAppViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val icon: ImageView = view.findViewById(R.id.appIcon)
+        val label: TextView = view.findViewById(R.id.appLabel)
     }
 
     // ---- Pinned Apps Adapter ----

@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">#1976D2</color>
-    <color name="primary_dark">#1565C0</color>
-    <color name="accent">#42A5F5</color>
-    <color name="bar_bg">#66000000</color>
-    <color name="panel_bg">#F0FFFFFF</color>
+    <color name="primary">#0A84FF</color>
+    <color name="primary_dark">#007AFF</color>
+    <color name="accent">#0A84FF</color>
+    <color name="bar_bg">#990A84FF</color>
+    <color name="panel_bg">#E6F2F2F7</color>
     <color name="panel_card_bg">#FFFFFFFF</color>
-    <color name="text_primary">#FF212121</color>
-    <color name="text_secondary">#FF757575</color>
-    <color name="divider">#FFE0E0E0</color>
-    <color name="status_on">#43A047</color>
-    <color name="status_off">#757575</color>
+    <color name="card_stroke">#1F000000</color>
+    <color name="text_primary">#FF000000</color>
+    <color name="text_secondary">#8E8E93</color>
+    <color name="divider">#3C3C4329</color>
+    <color name="status_on">#34C759</color>
+    <color name="status_off">#8E8E93</color>
 </resources>

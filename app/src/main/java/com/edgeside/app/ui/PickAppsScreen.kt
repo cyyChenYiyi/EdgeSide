@@ -1,8 +1,6 @@
 package com.edgeside.app.ui
 
 import android.content.Intent
-import android.content.pm.ApplicationInfo
-import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
@@ -24,9 +22,7 @@ import androidx.compose.material.Card
 import androidx.compose.material.Checkbox
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -35,7 +31,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -43,6 +38,8 @@ import androidx.compose.ui.unit.sp
 import androidx.core.graphics.drawable.toBitmap
 import com.edgeside.app.R
 import com.edgeside.app.data.DataRepository
+import com.edgeside.app.ui.theme.IosBlue
+import com.edgeside.app.ui.theme.IosGroupLabel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -63,7 +60,6 @@ fun PickAppsScreen(activity: ComponentActivity, onBack: () -> Unit) {
     LaunchedEffect(Unit) {
         val pm = activity.packageManager
         val pinnedNames = mutableSetOf<String>()
-        // Subscribe to pinned apps flow
         val pinnedJob = launch {
             DataRepository.pinnedAppsFlow.collect { list ->
                 pinnedNames.clear()
@@ -95,31 +91,23 @@ fun PickAppsScreen(activity: ComponentActivity, onBack: () -> Unit) {
             || it.packageName.contains(search, ignoreCase = true)
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(activity.getString(R.string.pick_apps_title)) },
-                backgroundColor = MaterialTheme.colors.primary,
-                contentColor = Color.White,
-                navigationIcon = {
-                    Text("←", modifier = Modifier.padding(16.dp).clickable { onBack() }, fontSize = 20.sp)
-                }
-            )
-        }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier.fillMaxSize().padding(innerPadding)
-        ) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier.fillMaxSize().padding(top = 44.dp)) {
+            // Search bar
             OutlinedTextField(
                 value = search,
                 onValueChange = { search = it },
                 placeholder = { Text(activity.getString(R.string.pick_apps_search)) },
-                modifier = Modifier.fillMaxWidth().padding(12.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 6.dp)
+                    .height(44.dp),
+                shape = RoundedCornerShape(12.dp)
             )
             Text(
                 text = activity.getString(R.string.pick_apps_selected, pinnedSet.size),
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
-                color = Color.Gray,
+                color = IosGroupLabel,
                 fontSize = 13.sp
             )
             LazyColumn {
@@ -131,6 +119,22 @@ fun PickAppsScreen(activity: ComponentActivity, onBack: () -> Unit) {
                     )
                 }
             }
+        }
+        // iOS-style top bar
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(44.dp)
+                .padding(horizontal = 16.dp),
+            contentAlignment = Alignment.CenterStart
+        ) {
+            Text(
+                "‹ 返回",
+                color = IosBlue,
+                fontSize = 17.sp,
+                fontWeight = FontWeight.Medium,
+                modifier = Modifier.clickable { onBack() }
+            )
         }
     }
 }
@@ -152,9 +156,9 @@ private fun AppRow(app: AppEntry, pinned: Boolean, onClick: () -> Unit) {
         )
         Spacer(Modifier.size(12.dp))
         Column(modifier = Modifier.weight(1f)) {
-            Text(text = app.label, fontWeight = FontWeight.Medium)
-            Text(text = app.packageName, fontSize = 12.sp, color = Color.Gray)
+            Text(text = app.label, fontWeight = FontWeight.Medium, fontSize = 16.sp)
+            Text(text = app.packageName, fontSize = 12.sp, color = IosGroupLabel)
         }
-        Checkbox(checked = pinned, onCheckedChange = null)
+        Checkbox(checked = pinned, onCheckedChange = null, checkedColor = IosBlue)
     }
 }

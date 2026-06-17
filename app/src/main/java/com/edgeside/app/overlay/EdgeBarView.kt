@@ -22,7 +22,7 @@ class EdgeBarView @JvmOverloads constructor(
     var onEdgeChanged: ((PanelEdge) -> Unit)? = null
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = 0xFF1976D2.toInt()
+        color = 0xFF0A84FF.toInt()
         style = Paint.Style.FILL
     }
     private val rect = RectF()
@@ -39,7 +39,6 @@ class EdgeBarView @JvmOverloads constructor(
 
     private val density = resources.displayMetrics.density
     private val touchSlopPx = (12 * density)
-    private val swipeThresholdPx = (24 * density)
     private val longPressTimeoutMs = 250L
 
     fun setPanelShown(shown: Boolean) {
@@ -79,21 +78,13 @@ class EdgeBarView @JvmOverloads constructor(
                 moveAccumX += abs(dx)
                 moveAccumY += abs(dy)
 
-                val totalDx = event.rawX - downRawX
-                val totalDy = event.rawY - downRawY
+                // NOTE: No "swipe-to-open" detection here.
+                // Detecting an inward swipe stole the system's edge-back gesture
+                // (which lives in the same edge zone). The panel is now opened by
+                // tapping the bar only — see ACTION_UP click handling below.
 
-                // Detect swipe out (towards center of screen) to open panel
-                if (!panelShown && !isDragging &&
-                    moveAccumX > touchSlopPx &&
-                    ((edge == PanelEdge.RIGHT && totalDx < -swipeThresholdPx) ||
-                     (edge == PanelEdge.LEFT && totalDx > swipeThresholdPx))
-                ) {
-                    panelShown = true
-                    onPanelToggle?.invoke(true)
-                    return true
-                }
-
-                // Dragging to move the bar
+                // Dragging to move the bar (only after a clear drag intent, so a
+                // tap never accidentally starts a drag).
                 if (isDragging || moveAccumY > touchSlopPx || moveAccumX > touchSlopPx * 1.5f) {
                     if (!isDragging) {
                         isDragging = true
